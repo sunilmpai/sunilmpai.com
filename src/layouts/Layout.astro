@@ -1,0 +1,60 @@
+---
+const { title = "Sunil M Pai" } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <script defer data-domain="sunilmpai.com" src="https://plausible.io/js/script.outbound-links.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+    <script src="/theme-toggle.js" defer></script>
+    <script>
+      if (
+        localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>    
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo">
+        <a href="/">SP</a>
+      </div>
+      <nav class="nav">
+        <a href="/about">About Me</a>
+        <a href="/interests">Interests</a>
+        <a href="/investing">Investing</a>
+        <a href="/bookmarks">Bookmarks</a>
+        <a href="/blog">Blog</a>
+      </nav>
+      <div class="theme-toggle">
+        <label class="switch">
+          <input type="checkbox" id="theme-toggle" />
+          <span class="slider">
+            <span class="icon sun">
+              <img src="/sun.svg" alt="Light mode" />
+            </span>
+            <span class="icon moon">
+              <img src="/moon.svg" alt="Dark mode" />
+            </span>
+          </span>
+        </label>
+      </div>
+  
+    </header>
+
+    <main class="home-content">
+      <slot />
+    </main>
+    <script src="/theme-toggle.js" defer></script>
+  </body>
+</html>

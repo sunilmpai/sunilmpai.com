@@ -1,0 +1,46 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+__MACOSX/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# OS Metadata
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Git
+*.swp
+*.swo
+*.orig
+
+# Build output
+dist/
+build/
+public/
+
+# Package files
+*.pkg
+*.zip
+*.tar
+*.gz
+*.7z
+
+# Local environment
+.env
+.env.local
+.env.*.local
+
+# VS Code app mistakenly added
+Visual Studio Code.app/
