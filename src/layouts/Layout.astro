@@ -4,6 +4,16 @@ const { title = "Sunil M Pai" } = Astro.props;
 
 <html lang="en">
   <head>
+    <script>
+      (() => {
+        try {
+          const theme = localStorage.getItem('theme');
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (_) {}
+      })();
+    </script>
     <script defer data-domain="sunilmpai.com" src="https://plausible.io/js/script.outbound-links.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
