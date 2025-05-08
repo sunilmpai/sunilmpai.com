@@ -2,6 +2,21 @@
    THEME SYSTEM (updated to html.dark)
 ======================== */
 
+/* Smooth theme transitions */
+body,
+.site-header,
+.nav a,
+.theme-toggle,
+.signature-heading,
+h1, h2, h3,
+a {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+
 body {
   background-color: #ffffff;
   color: #111;
