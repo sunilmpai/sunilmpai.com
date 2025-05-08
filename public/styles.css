@@ -234,6 +234,7 @@ h1, h2, h3 {
   height: 16px;
   width: 16px;
   display: block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .slider .sun {
