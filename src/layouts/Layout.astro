@@ -11,19 +11,29 @@ const { title = "Sunil M Pai" } = Astro.props;
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/styles.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
-    <script src="/theme-toggle.js" defer></script>
+
     <script>
-      if (
-        localStorage.theme === 'dark' ||
-        (!('theme' in localStorage) &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches)
-      ) {
-        document.documentElement.classList.add('dark');
+      const html = document.documentElement;
+      const checkbox = document.getElementById('theme-toggle');
+
+      // Set initial theme (default to light)
+      if (localStorage.theme === 'dark') {
+        html.classList.add('dark');
+        if (checkbox) checkbox.checked = true;
       } else {
-        document.documentElement.classList.remove('dark');
+        html.classList.remove('dark');
+        if (checkbox) checkbox.checked = false;
       }
-    </script>    
+
+      // Toggle theme manually
+      checkbox?.addEventListener('change', () => {
+        const isDark = checkbox.checked;
+        html.classList.toggle('dark', isDark);
+        localStorage.theme = isDark ? 'dark' : 'light';
+      });
+    </script>
   </head>
+
   <body>
     <header class="site-header">
       <div class="logo">
@@ -49,12 +59,10 @@ const { title = "Sunil M Pai" } = Astro.props;
           </span>
         </label>
       </div>
-  
     </header>
 
     <main class="home-content">
       <slot />
     </main>
-    <script src="/theme-toggle.js" defer></script>
   </body>
 </html>
