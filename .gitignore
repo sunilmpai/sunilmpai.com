@@ -28,7 +28,9 @@ Thumbs.db
 # Build output
 dist/
 build/
-public/
+# Ignore built public output, not your static asset folder
+/dist
+/build
 
 # Package files
 *.pkg
