@@ -1,0 +1,78 @@
+---
+const { title = "Sunil M Pai" } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <script>
+      (() => {
+        try {
+          const theme = localStorage.getItem('theme');
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (_) {}
+      })();
+    </script>
+    <script defer data-domain="sunilmpai.com" src="https://plausible.io/js/script.outbound-links.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+
+    <script>
+      const html = document.documentElement;
+      const checkbox = document.getElementById('theme-toggle');
+
+      // Set initial theme (default to light)
+      if (localStorage.theme === 'dark') {
+        html.classList.add('dark');
+        if (checkbox) checkbox.checked = true;
+      } else {
+        html.classList.remove('dark');
+        if (checkbox) checkbox.checked = false;
+      }
+
+      // Toggle theme manually
+      checkbox?.addEventListener('change', () => {
+        const isDark = checkbox.checked;
+        html.classList.toggle('dark', isDark);
+        localStorage.theme = isDark ? 'dark' : 'light';
+      });
+    </script>
+  </head>
+
+  <body>
+    <header class="site-header">
+      <div class="logo">
+        <a href="/">SP</a>
+      </div>
+      <nav class="nav">
+        <a href="/about">About Me</a>
+        <a href="/interests">Interests</a>
+        <a href="/investing">Investing</a>
+        <a href="/bookmarks">Bookmarks</a>
+        <a href="/blog">Blog</a>
+      </nav>
+      <div class="theme-toggle">
+        <label class="switch">
+          <input type="checkbox" id="theme-toggle" />
+          <span class="slider">
+            <span class="icon sun">
+              <img src="/sun.svg" alt="Light mode" />
+            </span>
+            <span class="icon moon">
+              <img src="/moon.svg" alt="Dark mode" />
+            </span>
+          </span>
+        </label>
+      </div>
+    </header>
+
+    <main class="home-content">
+      <slot />
+    </main>
+  </body>
+</html>
