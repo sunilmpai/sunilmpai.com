@@ -3,15 +3,14 @@
 
 <div id="substrate-container" style="
   position: fixed;
-  bottom: -80px;
-  right: -80px;
-  width: 550px;
-  height: 550px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.5;
-  transform: rotate(-10deg);
+  opacity: 0.3; /* Adjust opacity to keep your content readable */
 "></div>
 
 <script type="module" client:load>
@@ -24,6 +23,6 @@
     if (name === "viewof context") {
       return new Inspector(document.querySelector("#substrate-container"));
     }
-    return true; // skip other cells
+    return true; // Skip other notebook cells
   });
 </script>
