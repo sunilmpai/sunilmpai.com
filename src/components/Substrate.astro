@@ -35,5 +35,8 @@
       return new Inspector(document.querySelector("#substrate-container"));
     }
     return true;
-  }).redefine("interval", 1); // Speed up interval significantly (default is 100+)
+  });
+
+  runtime.redefine("n", 200); // Start with more initial points (faster immediate rendering)
+  runtime.redefine("interval", 0); // Zero interval ensures immediate updates
 </script>
