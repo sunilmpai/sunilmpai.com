@@ -37,6 +37,8 @@
     return true;
   });
 
-  runtime.redefine("n", 200); // Start with more initial points (faster immediate rendering)
-  runtime.redefine("interval", 0); // Zero interval ensures immediate updates
+  // Aggressively optimized parameters for fastest visual start
+  runtime.redefine("n", 400);         // More points initially
+  runtime.redefine("interval", 0);    // Zero delay for updates
+  runtime.redefine("delay", 0);       // Immediate processing, zero initial delays
 </script>
