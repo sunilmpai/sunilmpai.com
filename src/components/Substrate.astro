@@ -2,14 +2,17 @@
 ---
 
 <div id="substrate-container" style="
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 400px;
-    height: 400px;
-    overflow: hidden;
-    z-index: -1;
-    pointer-events: none;
+  position: fixed;
+  bottom: -80px;
+  right: -80px;
+  width: 550px;
+  height: 550px;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.5;
+  filter: blur(2px);
+  transform: rotate(-10deg);
 "></div>
 
 <script type="module" client:load>
@@ -22,6 +25,6 @@
     if (name === "viewof context") {
       return new Inspector(document.querySelector("#substrate-container"));
     }
-    return true; // skip all other cells
+    return true; // skip other cells
   });
 </script>
