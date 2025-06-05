@@ -1,16 +1,27 @@
 ---
 ---
 
-<div id="substrate-container" style="
+<div style="
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.25; /* Reduce opacity for subtlety */
+" id="substrate-container"></div>
+
+<div style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.4); /* Slight white overlay */
   z-index: -1;
   pointer-events: none;
-  opacity: 0.3; /* Adjust opacity to keep your content readable */
 "></div>
 
 <script type="module" client:load>
@@ -23,6 +34,6 @@
     if (name === "viewof context") {
       return new Inspector(document.querySelector("#substrate-container"));
     }
-    return true; // Skip other notebook cells
+    return true;
   });
 </script>
