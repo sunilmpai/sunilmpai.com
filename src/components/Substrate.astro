@@ -1,24 +1,27 @@
 ---
-import { onMount } from 'astro/client';
 ---
 
 <div id="substrate-container" style="
     position: fixed;
     bottom: 0;
     right: 0;
-    width: 400px;  /* Adjust as needed */
-    height: 400px; /* Adjust as needed */
+    width: 400px;
+    height: 400px;
     overflow: hidden;
-    z-index: -1; /* Ensures content appears on top */
+    z-index: -1;
     pointer-events: none;
 "></div>
 
-<script type="module">
-  import { Runtime, Inspector } from '@observablehq/runtime';
-  import define from '@mbostock/substrate';
+<script type="module" client:load>
+  import { Runtime, Inspector } from 'https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js';
+  import define from "https://api.observablehq.com/@mbostock/substrate.js?v=3";
 
-  onMount(() => {
-    const runtime = new Runtime();
-    runtime.module(define, Inspector.into("#substrate-container"));
+  const runtime = new Runtime();
+
+  runtime.module(define, name => {
+    if (name === "viewof context") {
+      return new Inspector(document.querySelector("#substrate-container"));
+    }
+    return true; // skip all other cells
   });
 </script>
