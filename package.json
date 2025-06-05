@@ -9,6 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@mbostock/substrate": "https://api.observablehq.com/@mbostock/substrate@238.tgz?v=3",
+    "@observablehq/runtime": "^5.9.9",
     "astro": "^5.7.4"
   },
   "devDependencies": {
