@@ -1,0 +1,14 @@
+{
+  "name": "@mbostock/substrate",
+  "main": "8a5e9213b0a4f627@238.js",
+  "version": "238.0.0",
+  "homepage": "https://observablehq.com/@mbostock/substrate",
+  "author": {
+    "name": "Mike Bostock",
+    "url": "https://observablehq.com/@mbostock"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}

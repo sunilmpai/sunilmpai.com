@@ -1,0 +1,44 @@
+---
+---
+
+<div style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.25;
+" id="substrate-container"></div>
+
+<div style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.4);
+  z-index: -1;
+  pointer-events: none;
+"></div>
+
+<script type="module" client:load>
+  import { Runtime, Inspector } from 'https://cdn.jsdelivr.net/npm/@observablehq/runtime@5/dist/runtime.js';
+  import define from "https://api.observablehq.com/@mbostock/substrate.js?v=3";
+
+  const runtime = new Runtime();
+
+  runtime.module(define, name => {
+    if (name === "viewof context") {
+      return new Inspector(document.querySelector("#substrate-container"));
+    }
+    return true;
+  });
+
+  // Aggressively optimized parameters for fastest visual start
+  runtime.redefine("n", 400);         // More points initially
+  runtime.redefine("interval", 0);    // Zero delay for updates
+  runtime.redefine("delay", 0);       // Immediate processing, zero initial delays
+</script>
