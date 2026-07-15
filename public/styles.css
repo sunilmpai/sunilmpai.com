@@ -153,35 +153,6 @@ h1, h2, h3 {
   margin-bottom: 1.25rem;
 }
 
-.advising-list {
-  list-style: disc;
-  padding-left: 1.25rem;
-  margin: 0;
-}
-
-.advising-item {
-  margin-bottom: 1.5rem;
-}
-
-.advising-item:last-child {
-  margin-bottom: 0;
-}
-
-.advising-description {
-  line-height: 1.8;
-}
-
-.advising-meta {
-  font-size: 0.875rem;
-  color: #777;
-  margin-top: 0.35rem;
-  line-height: 1.6;
-}
-
-html.dark .advising-meta {
-  color: #999;
-}
-
 @media (max-width: 600px) {
   .home-content {
     padding-left: 1.25rem;
