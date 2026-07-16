@@ -2,37 +2,79 @@
   if (window.__musicPlayerBooted) return;
   window.__musicPlayerBooted = true;
 
-  const STORAGE_KEY = 'musicEnabled';
+  const ENABLED_KEY = 'musicEnabled';
+  const TIME_KEY = 'musicTime';
+  const SRC = '/away-with-the-fairies.mp3';
 
-  function isMusicEnabled() {
-    if (window.__musicEnabled !== undefined) {
-      return window.__musicEnabled === true;
-    }
+  function readEnabled() {
     try {
-      return sessionStorage.getItem(STORAGE_KEY) === 'true';
+      return sessionStorage.getItem(ENABLED_KEY) === 'true';
     } catch (_) {
       return false;
     }
   }
 
-  function setMusicEnabledState(enabled) {
+  function writeEnabled(enabled) {
     window.__musicEnabled = enabled;
     try {
       if (enabled) {
-        sessionStorage.setItem(STORAGE_KEY, 'true');
+        sessionStorage.setItem(ENABLED_KEY, 'true');
       } else {
-        sessionStorage.removeItem(STORAGE_KEY);
+        sessionStorage.removeItem(ENABLED_KEY);
+        sessionStorage.removeItem(TIME_KEY);
       }
     } catch (_) {}
   }
 
-  function getAudio() {
-    if (!window.__siteAudio) {
-      window.__siteAudio = new Audio('/away-with-the-fairies.mp3');
-      window.__siteAudio.loop = true;
-      window.__siteAudio.preload = 'auto';
+  function isMusicEnabled() {
+    if (window.__musicEnabled !== undefined) {
+      return window.__musicEnabled === true;
     }
-    return window.__siteAudio;
+    return readEnabled();
+  }
+
+  function saveTime() {
+    const audio = window.__siteAudio;
+    if (!audio || audio.paused) return;
+    try {
+      sessionStorage.setItem(TIME_KEY, String(audio.currentTime));
+    } catch (_) {}
+  }
+
+  function restoreTime() {
+    const audio = ensureAudio();
+    try {
+      const saved = parseFloat(sessionStorage.getItem(TIME_KEY) || '0');
+      if (Number.isFinite(saved) && saved > 0) {
+        audio.currentTime = saved;
+      }
+    } catch (_) {}
+  }
+
+  function ensureAudio() {
+    if (window.__siteAudio) {
+      if (!window.__siteAudio.isConnected) {
+        document.documentElement.appendChild(window.__siteAudio);
+      }
+      return window.__siteAudio;
+    }
+
+    let audio = document.getElementById('site-music');
+    if (!audio) {
+      audio = document.createElement('audio');
+      audio.id = 'site-music';
+      audio.src = SRC;
+      audio.loop = true;
+      audio.preload = 'auto';
+      audio.setAttribute('playsinline', '');
+    }
+
+    if (!audio.isConnected) {
+      document.documentElement.appendChild(audio);
+    }
+
+    window.__siteAudio = audio;
+    return audio;
   }
 
   function syncToggleUI() {
@@ -48,35 +90,39 @@
     return Boolean(audio && !audio.paused && !audio.ended);
   }
 
-  function keepMusicContinuous() {
+  async function resumeMusic() {
     if (!isMusicEnabled()) return;
 
-    const audio = getAudio();
+    const audio = ensureAudio();
     if (isCurrentlyPlaying(audio)) return;
 
-    audio.play().catch(() => {});
+    try {
+      await audio.play();
+    } catch (_) {
+      // Keep enabled; a later user gesture can resume playback.
+    }
   }
 
   async function playMusic() {
-    const audio = getAudio();
+    const audio = ensureAudio();
 
     if (!isCurrentlyPlaying(audio)) {
       try {
         await audio.play();
       } catch (_) {
-        setMusicEnabledState(false);
+        writeEnabled(false);
         syncToggleUI();
         return;
       }
     }
 
-    setMusicEnabledState(true);
+    writeEnabled(true);
     syncToggleUI();
   }
 
   function pauseMusic() {
-    getAudio().pause();
-    setMusicEnabledState(false);
+    ensureAudio().pause();
+    writeEnabled(false);
     syncToggleUI();
   }
 
@@ -88,20 +134,70 @@
     pauseMusic();
   }
 
+  function handleNavigation() {
+    syncToggleUI();
+    restoreTime();
+    void resumeMusic();
+  }
+
   document.addEventListener('change', (event) => {
     if (event.target?.id !== 'music-toggle') return;
     setMusicEnabled(event.target.checked);
   });
 
-  document.addEventListener('astro:after-swap', () => {
-    syncToggleUI();
-    keepMusicContinuous();
+  document.addEventListener(
+    'click',
+    (event) => {
+      const link = event.target.closest('a[href]');
+      if (!link || !isMusicEnabled()) return;
+
+      const href = link.getAttribute('href') || '';
+      if (!href.startsWith('/') || href.startsWith('//')) return;
+      if (link.target === '_blank' || link.hasAttribute('download')) return;
+
+      saveTime();
+      void ensureAudio().play().catch(() => {});
+    },
+    true
+  );
+
+  document.addEventListener('pointerdown', () => {
+    if (!isMusicEnabled()) return;
+    const audio = ensureAudio();
+    if (!audio.paused) return;
+    restoreTime();
+    void audio.play().catch(() => {});
+  }, true);
+
+  document.addEventListener('astro:before-swap', () => {
+    saveTime();
+    void resumeMusic();
   });
 
-  document.addEventListener('astro:page-load', () => {
-    syncToggleUI();
-    keepMusicContinuous();
+  document.addEventListener('astro:after-swap', handleNavigation);
+  document.addEventListener('astro:page-load', handleNavigation);
+
+  window.addEventListener('pageshow', handleNavigation);
+  window.addEventListener('beforeunload', saveTime);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      restoreTime();
+      void resumeMusic();
+    }
   });
 
-  document.addEventListener('DOMContentLoaded', syncToggleUI);
+  function init() {
+    if (readEnabled()) {
+      window.__musicEnabled = true;
+      restoreTime();
+    }
+    syncToggleUI();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
