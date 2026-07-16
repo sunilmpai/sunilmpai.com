@@ -93,7 +93,7 @@ import { ClientRouter } from 'astro:transitions';
     </main>
 
     <div id="music-player-root" transition:persist="music-player" class="music-player-root" aria-hidden="true">
-      <div id="youtube-player"></div>
+      <audio id="site-music" loop preload="auto" src="/away-with-the-fairies.mp3"></audio>
     </div>
 
     <script is:inline src="/music-player.js"></script>
