@@ -121,6 +121,12 @@ html.dark .nav a {
   border-radius: 8px;
 }
 
+.investor-bracket {
+  font-size: 1.35em;
+  font-weight: 500;
+  line-height: 1;
+}
+
 .bookmarks-hero {
   margin: 0 0 2rem;
 }
