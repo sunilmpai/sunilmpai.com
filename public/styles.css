@@ -305,10 +305,64 @@ html.dark .layout-float .photo-caption {
 }
 
 /* Theme Toggle Switch */
-.theme-toggle {
+.header-controls {
   margin-left: auto;
   display: flex;
   align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.music-toggle {
+  width: 44px;
+  height: 24px;
+  border: 1px solid #ccc;
+  border-radius: 9999px;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.music-toggle img {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.music-toggle.is-playing {
+  background: #222;
+  border-color: #222;
+  color: #fff;
+}
+
+html.dark .music-toggle {
+  background: #222;
+  border-color: #444;
+  color: #eee;
+}
+
+html.dark .music-toggle.is-playing {
+  background: #eee;
+  border-color: #eee;
+  color: #111;
+}
+
+.music-player-root {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
 }
 
 .switch {

@@ -1,5 +1,6 @@
 ---
 const { title = "Sunil M Pai" } = Astro.props;
+import { ClientRouter } from 'astro:transitions';
 ---
 
 <html lang="en">
@@ -21,6 +22,7 @@ const { title = "Sunil M Pai" } = Astro.props;
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/styles.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+    <ClientRouter />
 
     <script>
       const html = document.documentElement;
@@ -56,23 +58,40 @@ const { title = "Sunil M Pai" } = Astro.props;
         <a href="/bookmarks">Bookmarks</a>
         <a href="/blog">Blog</a>
       </nav>
-      <div class="theme-toggle">
-        <label class="switch">
-          <input type="checkbox" id="theme-toggle" />
-          <span class="slider">
-            <span class="icon sun">
-              <img src="/sun.svg" alt="Light mode" />
+      <div class="header-controls">
+        <button
+          type="button"
+          id="music-toggle"
+          class="music-toggle"
+          aria-label="Toggle background music"
+          aria-pressed="false"
+        >
+          <img src="/music-note.svg" alt="" />
+        </button>
+        <div class="theme-toggle">
+          <label class="switch">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider">
+              <span class="icon sun">
+                <img src="/sun.svg" alt="Light mode" />
+              </span>
+              <span class="icon moon">
+                <img src="/moon.svg" alt="Dark mode" />
+              </span>
             </span>
-            <span class="icon moon">
-              <img src="/moon.svg" alt="Dark mode" />
-            </span>
-          </span>
-        </label>
+          </label>
+        </div>
       </div>
     </header>
 
     <main class="home-content">
       <slot />
     </main>
+
+    <div id="music-player-root" transition:persist="music-player" class="music-player-root" aria-hidden="true">
+      <div id="youtube-player"></div>
+    </div>
+
+    <script is:inline src="/music-player.js"></script>
   </body>
 </html>
