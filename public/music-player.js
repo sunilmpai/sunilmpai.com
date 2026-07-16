@@ -2,16 +2,39 @@
   if (window.__musicPlayerBooted) return;
   window.__musicPlayerBooted = true;
 
+  const TIME_KEY = 'musicCurrentTime';
+
   function shouldBePlaying() {
     return localStorage.getItem('musicPlaying') === 'true';
   }
 
-  function getAudio() {
-    if (window.__siteMusicAudio) return window.__siteMusicAudio;
+  function ensureAudio() {
+    if (window.__siteMusicAudio?.isConnected) {
+      return window.__siteMusicAudio;
+    }
 
-    const audio = document.getElementById('site-music');
-    if (audio) window.__siteMusicAudio = audio;
+    const root = document.getElementById('music-player-root');
+    if (!root) return null;
+
+    let audio = root.querySelector('#site-music');
+    if (!audio) {
+      audio = document.createElement('audio');
+      audio.id = 'site-music';
+      audio.loop = true;
+      audio.preload = 'auto';
+      audio.src = '/away-with-the-fairies.mp3';
+      root.appendChild(audio);
+    }
+
+    window.__siteMusicAudio = audio;
     return audio;
+  }
+
+  function savePlaybackTime() {
+    const audio = window.__siteMusicAudio;
+    if (audio && shouldBePlaying() && !audio.paused) {
+      sessionStorage.setItem(TIME_KEY, String(audio.currentTime));
+    }
   }
 
   function syncToggleUI() {
@@ -27,9 +50,20 @@
     return Boolean(audio && !audio.paused && !audio.ended);
   }
 
+  function restorePlaybackTime(audio) {
+    const saved = parseFloat(sessionStorage.getItem(TIME_KEY) || '0');
+    if (!Number.isFinite(saved) || saved <= 0) return;
+
+    if (audio.currentTime < saved - 0.25) {
+      audio.currentTime = saved;
+    }
+  }
+
   async function playMusic() {
-    const audio = getAudio();
+    const audio = ensureAudio();
     if (!audio) return;
+
+    restorePlaybackTime(audio);
 
     if (!isCurrentlyPlaying(audio)) {
       try {
@@ -46,7 +80,8 @@
   }
 
   function pauseMusic() {
-    const audio = getAudio();
+    const audio = ensureAudio();
+    savePlaybackTime();
     audio?.pause();
     localStorage.setItem('musicPlaying', 'false');
     syncToggleUI();
@@ -60,13 +95,20 @@
     pauseMusic();
   }
 
-  function initMusicToggle() {
+  function resumeIfNeeded() {
     syncToggleUI();
+    ensureAudio();
 
-    const audio = getAudio();
-    if (!audio || !shouldBePlaying() || isCurrentlyPlaying(audio)) return;
+    if (!shouldBePlaying()) return;
 
-    audio.play().catch(() => {});
+    const audio = window.__siteMusicAudio;
+    if (!audio) return;
+
+    restorePlaybackTime(audio);
+
+    if (audio.paused) {
+      audio.play().catch(() => {});
+    }
   }
 
   document.addEventListener('change', (event) => {
@@ -74,6 +116,15 @@
     setMusicEnabled(event.target.checked);
   });
 
-  document.addEventListener('astro:page-load', initMusicToggle);
-  document.addEventListener('DOMContentLoaded', initMusicToggle);
+  document.addEventListener('astro:before-swap', savePlaybackTime);
+
+  document.addEventListener('astro:after-swap', () => {
+    window.__siteMusicAudio = null;
+    resumeIfNeeded();
+  });
+
+  document.addEventListener('astro:page-load', resumeIfNeeded);
+  document.addEventListener('DOMContentLoaded', resumeIfNeeded);
+
+  setInterval(savePlaybackTime, 1000);
 })();
