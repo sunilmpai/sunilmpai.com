@@ -1,14 +1,21 @@
 (() => {
+  if (window.__musicPlayerBooted) return;
+  window.__musicPlayerBooted = true;
+
   const VIDEO_ID = 'O4Q8EudQWRo';
 
-  let player = null;
-  let apiLoading = null;
+  function shouldBePlaying() {
+    return localStorage.getItem('musicPlaying') === 'true';
+  }
+
+  function getPlayer() {
+    return window.__ytMusicPlayer ?? null;
+  }
 
   function loadYouTubeAPI() {
     if (window.YT?.Player) return Promise.resolve();
-    if (apiLoading) return apiLoading;
 
-    apiLoading = new Promise((resolve) => {
+    window.__ytApiLoading ??= new Promise((resolve) => {
       const previousReady = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = () => {
         previousReady?.();
@@ -22,31 +29,38 @@
       }
     });
 
-    return apiLoading;
+    return window.__ytApiLoading;
   }
 
-  function setToggleState(playing) {
-    const button = document.getElementById('music-toggle');
-    if (!button) return;
+  function syncToggleUI() {
+    const checkbox = document.getElementById('music-toggle');
+    if (!checkbox) return;
 
-    button.setAttribute('aria-pressed', playing ? 'true' : 'false');
-    button.classList.toggle('is-playing', playing);
+    const playing = shouldBePlaying();
+    checkbox.checked = playing;
+    checkbox.setAttribute('aria-pressed', playing ? 'true' : 'false');
   }
 
-  function shouldBePlaying() {
-    return localStorage.getItem('musicPlaying') === 'true';
+  function isCurrentlyPlaying(player) {
+    if (!player?.getPlayerState) return false;
+    const state = player.getPlayerState();
+    return state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING;
   }
 
   function createPlayer() {
-    if (player || window.__ytMusicPlayer) {
-      player = window.__ytMusicPlayer || player;
-      return player;
-    }
+    const existing = getPlayer();
+    if (existing) return existing;
 
     const target = document.getElementById('youtube-player');
     if (!target) return null;
 
-    player = new YT.Player('youtube-player', {
+    const iframe = target.tagName === 'IFRAME' ? target : target.querySelector('iframe');
+    if (iframe && window.YT?.Player) {
+      window.__ytMusicPlayer = new YT.Player(iframe);
+      return window.__ytMusicPlayer;
+    }
+
+    window.__ytMusicPlayer = new YT.Player('youtube-player', {
       height: '0',
       width: '0',
       videoId: VIDEO_ID,
@@ -64,9 +78,8 @@
       },
       events: {
         onReady: (event) => {
-          if (shouldBePlaying()) {
+          if (shouldBePlaying() && !isCurrentlyPlaying(event.target)) {
             event.target.playVideo();
-            setToggleState(true);
           }
         },
         onStateChange: (event) => {
@@ -77,48 +90,48 @@
       },
     });
 
-    window.__ytMusicPlayer = player;
-    return player;
+    return window.__ytMusicPlayer;
   }
 
   async function playMusic() {
     await loadYouTubeAPI();
-    createPlayer();
-    player?.playVideo();
+    const player = createPlayer();
+    if (!player) return;
+
+    if (!isCurrentlyPlaying(player)) {
+      player.playVideo?.();
+    }
+
     localStorage.setItem('musicPlaying', 'true');
-    setToggleState(true);
+    syncToggleUI();
   }
 
   function pauseMusic() {
-    player?.pauseVideo();
+    const player = getPlayer();
+    player?.pauseVideo?.();
     localStorage.setItem('musicPlaying', 'false');
-    setToggleState(false);
+    syncToggleUI();
   }
 
-  async function toggleMusic() {
-    const button = document.getElementById('music-toggle');
-    const isPlaying = button?.classList.contains('is-playing');
-
-    if (isPlaying) {
-      pauseMusic();
+  async function setMusicEnabled(enabled) {
+    if (enabled) {
+      await playMusic();
       return;
     }
-
-    await playMusic();
+    pauseMusic();
   }
 
   function initMusicToggle() {
-    setToggleState(shouldBePlaying());
+    syncToggleUI();
 
-    if (shouldBePlaying() && !player) {
-      loadYouTubeAPI().then(createPlayer);
-    }
+    if (!shouldBePlaying() || getPlayer()) return;
+
+    loadYouTubeAPI().then(createPlayer);
   }
 
-  document.addEventListener('click', (event) => {
-    const button = event.target.closest('#music-toggle');
-    if (!button) return;
-    toggleMusic();
+  document.addEventListener('change', (event) => {
+    if (event.target?.id !== 'music-toggle') return;
+    setMusicEnabled(event.target.checked);
   });
 
   document.addEventListener('astro:page-load', initMusicToggle);

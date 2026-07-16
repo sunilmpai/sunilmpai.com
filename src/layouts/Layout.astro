@@ -59,15 +59,19 @@ import { ClientRouter } from 'astro:transitions';
         <a href="/blog">Blog</a>
       </nav>
       <div class="header-controls">
-        <button
-          type="button"
-          id="music-toggle"
-          class="music-toggle"
-          aria-label="Toggle background music"
-          aria-pressed="false"
-        >
-          <img src="/music-note.svg" alt="" />
-        </button>
+        <div class="theme-toggle music-toggle">
+          <label class="switch">
+            <input type="checkbox" id="music-toggle" aria-label="Toggle background music" aria-pressed="false" />
+            <span class="slider">
+              <span class="icon speaker-off">
+                <img src="/speaker-off.svg" alt="" />
+              </span>
+              <span class="icon speaker-on">
+                <img src="/speaker-on.svg" alt="" />
+              </span>
+            </span>
+          </label>
+        </div>
         <div class="theme-toggle">
           <label class="switch">
             <input type="checkbox" id="theme-toggle" />
