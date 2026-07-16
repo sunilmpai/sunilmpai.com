@@ -55,8 +55,20 @@ html.dark .site-header {
   border-color: #333;
 }
 
+:root {
+  --site-font: 'Inter', sans-serif;
+}
+
+html[data-font='serif'] {
+  --site-font: 'Lora', Georgia, serif;
+}
+
+html[data-font='mono'] {
+  --site-font: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--site-font);
   font-size: 16px;
   line-height: 1.8;
   color: #444;
@@ -341,6 +353,31 @@ html.dark .music-toggle .slider,
 html.dark .music-toggle input:checked + .slider {
   background-color: #222;
   border-color: #444;
+}
+
+/* Font Toggle Button */
+.font-btn {
+  width: 44px;
+  height: 24px;
+  border-radius: 9999px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #111;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1;
+  font-family: var(--site-font);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+html.dark .font-btn {
+  background-color: #222;
+  border-color: #444;
+  color: #eee;
 }
 
 .switch {

@@ -12,6 +12,10 @@ import { ClientRouter } from 'astro:transitions';
           if (theme === 'dark') {
             document.documentElement.classList.add('dark');
           }
+          const font = localStorage.getItem('fontPref');
+          if (font === 'serif' || font === 'mono') {
+            document.documentElement.setAttribute('data-font', font);
+          }
         } catch (_) {}
       })();
     </script>
@@ -22,9 +26,10 @@ import { ClientRouter } from 'astro:transitions';
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/styles.css" />
     <link rel="preload" href="/away-with-the-fairies.mp3" as="fetch" type="audio/mpeg" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter&family=Lora&family=JetBrains+Mono&display=swap" rel="stylesheet" />
     <ClientRouter />
     <script is:inline src="/music-player.js"></script>
+    <script is:inline src="/font-toggle.js"></script>
 
     <script>
       const html = document.documentElement;
@@ -73,6 +78,15 @@ import { ClientRouter } from 'astro:transitions';
               </span>
             </span>
           </label>
+        </div>
+        <div class="theme-toggle">
+          <button
+            type="button"
+            id="font-toggle"
+            class="font-btn"
+            aria-label="Cycle font: sans, serif, monospace"
+            title="Change font"
+          >Aa</button>
         </div>
         <div class="theme-toggle">
           <label class="switch">
