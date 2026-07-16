@@ -186,6 +186,53 @@ html.dark .advising-meta {
   color: #999;
 }
 
+.layout-float .grid {
+  display: block;
+}
+
+.layout-float .profile-image {
+  float: right;
+  width: 220px;
+  margin: 0.25rem 0 1rem 1.75rem;
+}
+
+.layout-float .profile-image figure {
+  margin: 0;
+}
+
+.layout-float .profile-image img {
+  width: 100%;
+  display: block;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  max-width: none;
+}
+
+html.dark .layout-float .profile-image img {
+  border-color: #333;
+}
+
+.layout-float .photo-caption {
+  font-size: 0.8125rem;
+  color: #777;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+html.dark .layout-float .photo-caption {
+  color: #999;
+}
+
+.layout-float .bio {
+  overflow: hidden;
+}
+
+.layout-float .bio::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 @media (max-width: 600px) {
   .home-content {
     padding-left: 1.25rem;
@@ -199,6 +246,17 @@ html.dark .advising-meta {
 
   .bio {
     text-align: center;
+  }
+
+  .layout-float .profile-image {
+    float: none;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .layout-float .bio {
+    text-align: left;
   }
 }
 
