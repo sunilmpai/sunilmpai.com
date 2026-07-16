@@ -3,7 +3,7 @@ const { title = "Sunil M Pai" } = Astro.props;
 import { ClientRouter } from 'astro:transitions';
 ---
 
-<html lang="en">
+<html lang="en" transition:animate="none">
   <head>
     <script>
       (() => {
@@ -21,8 +21,10 @@ import { ClientRouter } from 'astro:transitions';
     <title>{title}</title>
     <link rel="icon" href="/favicon.ico" />
     <link rel="stylesheet" href="/styles.css" />
+    <link rel="preload" href="/away-with-the-fairies.mp3" as="fetch" type="audio/mpeg" />
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
     <ClientRouter />
+    <script is:inline src="/music-player.js"></script>
 
     <script>
       const html = document.documentElement;
@@ -47,7 +49,16 @@ import { ClientRouter } from 'astro:transitions';
   </head>
 
   <body>
-    <header class="site-header">
+    <audio
+      id="site-music"
+      transition:persist="site-music"
+      loop
+      preload="auto"
+      playsinline
+      src="/away-with-the-fairies.mp3"
+    ></audio>
+
+    <header class="site-header" transition:persist="site-header">
       <div class="logo">
         <a href="/">SP</a>
       </div>
@@ -92,6 +103,5 @@ import { ClientRouter } from 'astro:transitions';
       <slot />
     </main>
 
-    <script is:inline src="/music-player.js"></script>
   </body>
 </html>

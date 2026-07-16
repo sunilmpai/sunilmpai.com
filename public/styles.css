@@ -403,3 +403,12 @@ input:checked + .slider .moon {
 input:checked + .slider {
   background-color: #222;
 }
+
+#site-music {
+  position: fixed;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  clip: rect(0, 0, 0, 0);
+}
