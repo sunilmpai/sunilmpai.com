@@ -343,15 +343,6 @@ html.dark .music-toggle input:checked + .slider {
   border-color: #444;
 }
 
-.music-player-root {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-}
-
 .switch {
   position: relative;
   display: inline-block;
