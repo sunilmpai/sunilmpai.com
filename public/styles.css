@@ -220,7 +220,7 @@ html.dark .advising-meta {
   color: #999;
 }
 
-.layout-float .grid {
+.grid.layout-float {
   display: block;
 }
 
