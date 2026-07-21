@@ -246,15 +246,23 @@ html.dark .layout-float .profile-image img {
   border-color: #333;
 }
 
-.layout-float .photo-caption {
+.photo-caption {
   font-size: 0.8125rem;
   color: #777;
   margin-top: 0.5rem;
   line-height: 1.5;
 }
 
-html.dark .layout-float .photo-caption {
+html.dark .photo-caption {
   color: #999;
+}
+
+.profile-image figure {
+  margin: 0;
+}
+
+.bookmarks-hero .photo-caption {
+  text-align: center;
 }
 
 .layout-float .bio {
