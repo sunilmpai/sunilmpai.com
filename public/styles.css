@@ -355,6 +355,10 @@ html.dark .music-toggle input:checked + .slider {
   border-color: #444;
 }
 
+html.dark .music-toggle .icon img {
+  filter: invert(1);
+}
+
 /* Font Toggle Button */
 .font-btn {
   width: 44px;
