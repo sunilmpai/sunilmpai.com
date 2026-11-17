@@ -1,5 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const companies = [
+  { name: "Cognition", url: "https://cognition.com/", logo: "/company-logos/cognition.svg" },
+  { name: "Anduril", url: "https://www.anduril.com/", logo: "/company-logos/anduril.png" },
+  { name: "Micro1", url: "https://www.micro1.ai/", logo: "/company-logos/micro1.svg" },
+  { name: "Higgsfield", url: "https://higgsfield.ai/", logo: "/company-logos/higgsfield.svg" },
+  { name: "ArenaAI", url: "https://arena.ai/", logo: "/company-logos/arena-ai.svg" },
+  { name: "Mercury", url: "https://mercury.com/", logo: "/company-logos/mercury.svg" },
+  { name: "Genesis", url: "https://www.genesis.ai/", logo: "/company-logos/genesis.svg" },
+  { name: "Erebor", url: "https://erebor.bank/", logo: "/company-logos/erebor.svg" },
+];
 ---
 
 <Layout title="Investing - Sunil M Pai">
@@ -17,6 +28,25 @@ import Layout from '../layouts/Layout.astro';
 
       <p>In addition to my personal investments, I run <a href="https://www.angelcollective.com/" target="_blank" rel="noopener noreferrer">Angel Collective</a> with my partner, <a href="https://www.linkedin.com/in/candito/" target="_blank" rel="noopener noreferrer">Nick Candito</a>.
         I believe investing other peoples' money is a privilege and a responsibility.</p>
+
+      <ul class="company-grid" aria-label="Selected investments" role="list">
+        {companies.map((company) => (
+          <li>
+            <a href={company.url} target="_blank" rel="noopener noreferrer">
+              <img
+                class:list={["company-logo", { "company-logo--wide": company.name === "Micro1" }]}
+                src={company.logo}
+                alt=""
+                width="52"
+                height="48"
+                loading="lazy"
+                decoding="async"
+              />
+              <span>{company.name}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
 
       <h2>Advising</h2>
       <p>I serve as a hands-on advisor to several startups:</p>
@@ -54,3 +84,85 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </div>
 </Layout>
+
+<style>
+  .company-grid {
+    --grid-line: #e6e6e6;
+    --grid-cell: #fafafa;
+    --grid-hover: #f1f1f1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    list-style: none;
+    margin: 2rem 0 2.5rem;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--grid-line);
+    border-radius: 12px;
+    background: var(--grid-line);
+  }
+
+  .company-grid li {
+    min-width: 0;
+    margin: 0;
+    background: var(--grid-cell);
+  }
+
+  .company-grid a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    box-sizing: border-box;
+    min-height: 132px;
+    padding: 1.5rem 0.5rem;
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .company-grid a:hover {
+    background: var(--grid-hover);
+  }
+
+  .company-grid a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: -4px;
+    border-radius: 8px;
+  }
+
+  .company-logo {
+    display: block;
+    width: 52px;
+    height: 48px;
+    object-fit: contain;
+  }
+
+  .company-logo--wide {
+    width: 70px;
+  }
+
+  .company-grid span {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  :global(html.dark) .company-grid {
+    --grid-line: #333;
+    --grid-cell: #191919;
+    --grid-hover: #252525;
+  }
+
+  :global(html.dark) .company-logo {
+    filter: invert(1);
+  }
+
+  @media (max-width: 700px) {
+    .company-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
